@@ -35,7 +35,7 @@ export function SignInModal() {
         password,
       });
       const authHeader = response.headers.getAuthorization();
-      const token = toString(authHeader.split(" ")[1]);
+      const token = authHeader.split(" ")[1];
       console.log(token);
       if(!authHeader){
         navigate("/signin");

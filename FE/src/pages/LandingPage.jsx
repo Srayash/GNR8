@@ -20,11 +20,7 @@ export function LandingPage(){
                 withCredentials: true, 
               })
               .then((response) => {
-                if(response.status==401){
-                    localStorage.clear();
-                }
                 const data = response.data;
-                console.log(data);
                 const authHeader = response.headers.getAuthorization(); 
                 const token = authHeader.split(" ")[1];
                 localStorage.setItem("token", token);
@@ -32,6 +28,7 @@ export function LandingPage(){
               })
               .catch((err) => {
                 setError(err.response?.data?.message || err.message);
+                localStorage.clear();
               })
               .finally(() => {
                 setLoading(false);
