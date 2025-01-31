@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    @apply bg-theme-black
+}
+
+/* PromptBar.css (or any global CSS file) */
+@keyframes glow {
+    0% {
+      box-shadow: 0 0 5px var(--theme-purple-primary);
+    }
+    50% {
+      box-shadow: 0 0 20px var(--theme-purple-primary);
+    }
+    100% {
+      box-shadow: 0 0 5px var(--theme-purple-primary);
+    }
+  }
+  
+  .animate-glow {
+    /* 
+      The border is already set via Tailwind classes, so we only define the 
+      animation here. 
+    */
+    animation: glow 1.5s ease-in-out infinite;
+    transition: border-color 0.3s;
+  }
+  

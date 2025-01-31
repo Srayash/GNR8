@@ -1,0 +1,206 @@
+const express = require("express");
+const session = require("express-session");
+const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+const cors = require("cors");
+const passport = require("passport");
+const dotenv = require("dotenv").config();
+const User = require("./models/userModel");
+require("dotenv").config();
+
+const app = express();
+
+const dbURI = process.env.DB_URL;
+mongoose
+  .connect(dbURI)
+  .then(console.log("Connected to mongoDB"))
+  .catch((err) => console.log(err));
+
+const corsOptions = {
+    origin: ["http://localhost:5173"],
+    exposedHeaders: 'Authorization',
+    credentials: true, // Include cookies in requests
+};
+
+app.use(cors(corsOptions));
+app.use(express.json());
+
+const mainRouter = require("./routes/index");
+
+// Session middleware
+app.use(
+    session({
+      secret: process.env.SESSION_SECRET, // Replace with a strong secret
+      resave: false,
+      saveUninitialized: false,
+      cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }, // Use `true` only with HTTPS
+    })
+  );
+  
+  // Passport.js initialization
+  app.use(passport.initialize());
+  app.use(passport.session());
+  
+  app.use(express.json());
+  
+  passport.serializeUser((user, done) => {
+    //   console.log("Serializing user with ID:", user.id);
+    done(null, user.id);
+  });
+  
+  passport.deserializeUser(async (id, done) => {
+    try {
+      // console.log("Deserializing user with ID:", id);
+      const user = await User.findById(id);
+      done(null, user);
+    } catch (err) {
+      done(err, null);
+    }
+  });
+
+app.use("/api/v1", mainRouter);
+
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "http://localhost:3000/auth/google/callback",
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        // Extract user details from the Google profile
+        const email = profile.emails[0].value;
+        const googleId = profile.id;
+        const name = profile.displayName;
+        // console.log(email);
+        // console.log(googleId);
+        // console.log(name);
+        const user = await User.findOrCreate(
+          { email }, // Match by email (ensures uniqueness)
+          {
+            email,
+            googleId,
+            name, // Only Google or Github users will have this field populated
+          }
+        );
+
+        return done(null, user);
+      } catch (err) {
+        return done(err, null);
+      }
+    }
+  )
+);
+
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/" }),
+  (req, res) => {
+    // Successful authentication, redirect home.
+    req.session.user = req.user;
+    res.redirect("http://localhost:5173/");
+  }
+);
+
+const GitHubStrategy = require("passport-github2").Strategy;
+
+passport.use(
+  new GitHubStrategy(
+    {
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: "http://localhost:3000/auth/github/callback",
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        let email = null;
+
+        if (profile.emails && profile.emails.length > 0) {
+          email = profile.emails[0].value; // Use the first email
+        } else {
+          // Fetch email using GitHub API if not available in profile
+          const response = await fetch("https://api.github.com/user/emails", {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          });
+          const emails = await response.json();
+          const primaryEmail = emails.find((e) => e.primary && e.verified);
+          if (primaryEmail) {
+            email = primaryEmail.email;
+          }
+        }
+
+        if (!email) {
+          return done(new Error("Unable to retrieve email from GitHub."));
+        }
+        const githubId = profile.id;
+        const name = profile.username;
+        // console.log(githubId);
+        // console.log(name);
+        // console.log(email);
+        const user = await User.findOrCreate(
+          { email }, // Match by email (ensures uniqueness)
+          {
+            email,
+            githubId,
+            name, // Only Google or Github users will have this field populated
+          }
+        );
+        return done(null, user);
+      } catch (err) {
+        return done(err, null);
+      }
+    }
+  )
+);
+
+app.get(
+  "/auth/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
+
+app.get(
+  "/auth/github/callback",
+  passport.authenticate("github", { failureRedirect: "/" }),
+  (req, res) => {
+    // Successful authentication, redirect home.
+    req.session.user = req.user;
+    // res.setHeader("Authorization", `Bearer ${req.user}`);
+    console.log(req.user)
+    res.redirect("http://localhost:5173/");
+  }
+);
+
+app.get("/api/v1/user_data", (req, res) => {
+  if (req.isAuthenticated()) {
+    // If the user is authenticated, send back the user data
+    // console.log(req.user.name);
+    // console.log(req.user.email);
+    const token = jwt.sign({
+        userId: req.user._id
+    }, process.env.JWT_SECRET);
+
+    res.setHeader("Authorization", `Bearer ${token}`);
+
+    res.json({
+      name: req.user.name, // Assuming the user object has a 'name' property
+    });
+  } else {
+    // If the user is not authenticated, send an error message
+    res.status(401).json({ message: "Not authenticated" });
+  }
+});
+
+app.get("/session-test", (req, res) => {
+  console.log("Session data:", req.session);
+  res.json({ session: req.session });
+});
+
+app.listen(3000);

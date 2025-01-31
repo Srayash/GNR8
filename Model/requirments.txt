@@ -1,0 +1,5 @@
+flask
+crewai
+crewai_tools
+langchain_groq
+python-dotenv
