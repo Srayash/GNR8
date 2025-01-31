@@ -10,83 +10,47 @@ const signupBody = z.object({
     email: z.string().email(),
     password: z.string(),
     confirmPassword: z.string(),
-})
+});
 
 router.post("/signup", async (req, res) => {
-    const {success} = signupBody.safeParse(req.body)
-    if(!success){
+    const { success } = signupBody.safeParse(req.body);
+    if (!success) {
         return res.status(411).json({
-            message: "Invalid Inputs"
-        })
+            message: "Invalid Inputs",
+        });
     }
 
-    if(!(req.body.password === req.body.confirmPassword)){
+    if (!(req.body.password === req.body.confirmPassword)) {
         return res.status(411).json({
-            message: "Passwords don't match"
-        })
+            message: "Passwords don't match",
+        });
     }
 
-    const exisitingUser = await User.findOne({
-        email: req.body.email
-    })
+    const existingUser = await User.findOne({
+        email: req.body.email,
+    });
 
-    if(exisitingUser){
+    if (existingUser) {
         res.status(411).json({
-            message: "Email already in use."
-        })
+            message: "Email already in use.",
+        });
         return;
     }
 
     const user = await User.create({
         email: req.body.email,
         password: req.body.password,
-    })
-    const userId = user._id;
-
-    const token = jwt.sign({
-        userId
-    }, JWT_SECRET);
-
-    res.setHeader("Authorization", `Bearer ${token}`);
-
-    res.json({
-        message: "User Created Succesfully",
-        name: user.email
-    })
-});
-
-const signinBody = z.object({
-    email: z.string().email(),
-    password: z.string()
-})
-
-router.post("/signin", async (req, res) => {
-    const { success } = signinBody.safeParse(req.body);
-    if (!success) {
-        return res.status(411).json({
-            message: "Invalid Inputs"
-        });
-    }
-
-    const user = await User.findOne({
-        email: req.body.email,
-        password: req.body.password
     });
 
-    if (!user) {
-        return res.status(403).json({
-            message: "Wrong Email or Password"
-        });
-    }
+    const userId = user._id;
 
-    const token = jwt.sign({
-        userId: user._id
-    }, JWT_SECRET);
+    const token = jwt.sign({ userId }, process.env.JWT_SECRET);
 
     res.setHeader("Authorization", `Bearer ${token}`);
 
     res.json({
-        name: user.email
+        message: "User Created Successfully",
+        name: user.email,
     });
 });
 

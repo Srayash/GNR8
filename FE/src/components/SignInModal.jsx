@@ -30,23 +30,17 @@ export function SignInModal() {
   async function handleSignin() {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3000/api/v1/user/signin", {
-        email,
-        password,
-      });
-      const authHeader = response.headers.getAuthorization();
-      const token = authHeader.split(" ")[1];
-      console.log(token);
-      if(!authHeader){
-        navigate("/signin");
-      }
-      setUserState({
-        name: response.data.name,
-        token: token,
-      })
-      console.log(userState);
-      localStorage.setItem("name", response.data.name);
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/user/signin",
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
+  
       navigate("/");
+  
     } catch (error) {
       if (error.response) {
         setErrorState({
@@ -78,6 +72,7 @@ export function SignInModal() {
       setLoading(false);
     }
   }
+  
 
   return (
     <>
