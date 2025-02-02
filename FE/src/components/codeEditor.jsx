@@ -14,7 +14,7 @@ export default function CodeEditor({file}) {
 
   return (
     <MonacoEditor
-      className="flex-1 z-20"
+      className="flex-1"
       height="100%"
       language={language}
       value={content}
