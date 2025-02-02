@@ -1,10 +1,6 @@
 import MonacoEditor from '@monaco-editor/react';
 
-/**
- * Displays the code of the currently selected file in a Monaco Editor.
- * @param {{ file: { name: string, content: string }}} props
- */
-export default function CodeEditor({ file }) {
+export default function CodeEditor({file}) {
   if(!file){
     return(<div className='h-full w-full bg-black'></div>)
   }

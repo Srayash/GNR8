@@ -37,7 +37,6 @@ export function SignUpModal() {
         name: response.data.name,
         token: token,
       })
-      console.log(userState);
       localStorage.setItem("name", response.data.name);
       navigate("/");
     } catch (error) {

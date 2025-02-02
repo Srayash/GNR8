@@ -4,6 +4,10 @@ import arrow_fwd from "../assets/arrow_fwd.svg";
 import arrow_back from "../assets/back.svg";
 import ImprovementChat from "./ImprovementChat";
 import Toolbar from "./Toolbar";
+import axios from "axios";
+import { useSetRecoilState } from "recoil";
+import { predictionStateAtom } from "../store/atoms/predictionState";
+import { errorStateAtom } from "../store/atoms/errorState";
 
 export default function ResultSideBar({ brief }) {
   const [messages, setMessages] = useState([]);
@@ -11,6 +15,8 @@ export default function ResultSideBar({ brief }) {
   const [prompt, setPrompt] = useState("");
   const [isChatOpen, setIsChatOpen] = useState(true);
   const navigate = useNavigate();
+  const setPrediction = useSetRecoilState(predictionStateAtom);
+  const setErrorState = useSetRecoilState(errorStateAtom);
 
   useEffect(() => {
     if (brief?.message) {
@@ -22,10 +28,39 @@ export default function ResultSideBar({ brief }) {
     setIsChatOpen(openChat);
   };
 
-  const handleSubmit = (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
-    // Add your submit logic here
-  };
+  
+    setIsLoading(true);
+    setPrompt("");
+  
+    try {
+      const response = await axios.post("http://localhost:3000/api/v1/generate/improvement", {
+        prompt
+      }, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token")
+        }
+      });
+      setPrediction(response.data.data.updated_code);
+      
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      navigate("/signin");
+      setErrorState({
+        visible: true,
+        text: "Sign in to continue GNR8ing",
+      });
+      setTimeout(() => {
+        setErrorState({
+          visible: false,
+          text: "",
+        });
+      }, 5000);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <div className="flex w-1/4 flex-col justify-between bg-theme-black text-white py-3 px-4 border-[#313030] border-r">

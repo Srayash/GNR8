@@ -20,11 +20,12 @@ export function ResultPage(){
   const fileContent = parseContent(prediction);
 
   useEffect(()=>{
-    if(fileContent){
-      const transformedFiles = transformToFileStructure(fileContent);
+    const Content = parseContent(prediction);
+    if(Content){
+      const transformedFiles = transformToFileStructure(Content);
       setFiles(transformedFiles);
     }
-  },[]);
+  },[prediction]);
 
   return <>
     <div className="w-screen h-screen overflow-hidden flex flex-col">
@@ -33,7 +34,7 @@ export function ResultPage(){
         <ResultSideBar props={fileContent} />
         <div className="flex flex-1 flex-col">
           <ResultNav />
-          {!isPreviewing?<WebsitePreview content={prediction} />:
+          {!isPreviewing?<WebsitePreview />:
           <div className="flex flex-1">
             <FileExplorer prop={files} setUseState={setSelectedFile}/>
             <CodeEditor file={selectedFile}/>

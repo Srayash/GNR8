@@ -2,6 +2,8 @@ import document from "../assets/document.svg"
 
 export default function FileExplorer({prop ,setUseState}){
 
+  console.log(prop);
+
     return<>
         <div className="flex flex-col h-full w-1/4 bg-theme-black p-4 overflow-auto">
           {/* <h2 className="text-gray-200 mb-4">Files</h2> */}
