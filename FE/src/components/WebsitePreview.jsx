@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import parseContent from '../utils/parserFunction';
+import { useRecoilValue } from 'recoil';
+import { predictionStateAtom } from '../store/atoms/predictionState';
 
-/**
- * @param {{ content: any }} props
- */
-export default function WebsitePreview({ content }) {
-  const fileContent = parseContent(content);
+export default function WebsitePreview() {
+  const prediction = useRecoilValue(predictionStateAtom);
+  const fileContent = parseContent(prediction);
   const [previewUrl, setPreviewUrl] = useState(null);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function WebsitePreview({ content }) {
     return () => {
       URL.revokeObjectURL(url);
     };
-  }, []);
+  }, [prediction]);
 
   return (
     <div className="h-full w-full">

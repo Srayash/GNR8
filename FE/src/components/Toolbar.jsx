@@ -1,33 +1,77 @@
-import { useState } from "react";
-import {
-  Bold,
-  Italic,
-  Underline,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-  ChevronDown,
-  Plus,
-  MessageSquare,
-  FlipHorizontal as DragDropHorizontal,
-  X,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import {ChevronDown} from "lucide-react";
 import Typography from "../assets/Typography.svg"
 import Color from "../assets/Color.svg"
-import Layout from "../assets/Layout.svg"
+import Cube from "../assets/cube.svg"
 import QuickActionHeader from "./QuickActionHeader";
+import { useSetRecoilState } from "recoil";
+import { predictionStateAtom } from "../store/atoms/predictionState";
+import { errorStateAtom } from "../store/atoms/errorState";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Toolbar(){
 
     const [selectedOption, setSelectedOption] = useState('');
     const [isOpen, setIsOpen] = useState(false);
-    const [fontColor, setFontColor] = useState("#83D5C7");
+    const [fontSize, setFontSize] = useState("");
+    const [fontColor, setFontColor] = useState("");
     const [colors, setColors] = useState([
-        { label: "primary", color: "#83D5C7" },
-        { label: "secondary", color: "#83D5C7" },
-        { label: "tertiary", color: "#83D5C7" },
-        { label: "background", color: "#83D5C7" },
+        { label: "primary", color: "" },
+        { label: "secondary", color: "" },
+        { label: "tertiary", color: "" },
+        { label: "background", color: "" },
     ]);
+    axios
+      const setPrediction = useSetRecoilState(predictionStateAtom);
+      const setErrorState = useSetRecoilState(errorStateAtom);
+      const [prompt, setPrompt] = useState("");
+      const[isLoading, setIsLoading] = useState(false);
+      const navigate = useNavigate();
+
+    useEffect(()=>{
+      const GeneratedPrompt = `set Font to ${selectedOption} (ignore if no font is specified), set Font Color to ${fontColor} (ignore if nothing is specified), set Font size to ${fontSize}, change the website theme colors to the Following:-
+      Primary Color - ${colors[0].color} ignore if no primary color is specified)
+      Secondary Color - ${colors[1].color} ignore if no secondary color is specified)
+      tertiary Color - ${colors[2].color} ignore if no tertiary color is specified)
+      Background Color -  ${colors[3].color} ignore if no background color is specified)`;
+
+      setPrompt(GeneratedPrompt);
+    },[selectedOption, fontColor, colors]);
+
+    async function handleSubmit(e) {
+      e.preventDefault();
+    
+      setIsLoading(true);
+      setPrompt("");
+    
+      try {
+        const response = await axios.post("http://localhost:3000/api/v1/generate/improvement", {
+          prompt
+        }, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        });
+        setPrediction(response.data.data.updated_code);
+        
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        navigate("/signin");
+        setErrorState({
+          visible: true,
+          text: "Sign in to continue GNR8ing",
+        });
+        setTimeout(() => {
+          setErrorState({
+            visible: false,
+            text: "",
+          });
+        }, 5000);
+      } finally {
+        setIsLoading(false);
+      }
+    }
   
     const handleSelect = (option) => {
       setSelectedOption(option);
@@ -85,14 +129,14 @@ export default function Toolbar(){
         <div className="flex flex-col gap-1">
             <p className="text-[#C9C6C5] text-sm">Font Size</p>
             <div className="flex items-center gap-2">
-            <input type="number" placeholder="16"  className="h-10 w-[50px] placeholder-[#C9C6C5] text-sm outline-none px-4 bg-theme-gray-primary border border-[#313030] rounded-xl text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"></input>
+            <input type="number" placeholder="16" onChange={(e)=>{setPrompt(e.target.value)}}  className="h-10 w-[50px] placeholder-[#C9C6C5] text-sm outline-none px-4 bg-theme-gray-primary border border-[#313030] rounded-xl text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"></input>
             <p className="text-[#C9C6C5] text-sm">px</p>
             </div>
             </div>
             <div className="flex flex-col gap-1">
             <span className="mr-4 text-[#C9C6C5] text-sm">Font Color</span>
             <div
-              className="h-10 rounded-xl border-[#313030] cursor-pointer relative overflow-hidden"
+              className="h-10 rounded-xl border border-theme-gray-secondary cursor-pointer relative overflow-hidden"
               style={{ backgroundColor: fontColor }}
             >
               <input
@@ -112,7 +156,7 @@ export default function Toolbar(){
             <div key={index} className="flex items-center mt-2">
               <div className="flex gap-2">
                 <div
-                  className="size-10 rounded-xl relative overflow-hidden"
+                  className="size-10 rounded-xl border border-theme-gray-secondary relative overflow-hidden"
                   style={{ backgroundColor: item.color }}
                 >
                   <input
@@ -137,7 +181,7 @@ export default function Toolbar(){
     </div>
     {/*Apply Changes Button*/}
     <div>
-        <button className="w-full bg-theme-purple-primary border border-theme-purple-secondary py-2 items-center rounded-xl">Apply Changes</button>
+        <button onClick={handleSubmit} className={`w-full flex justify-center bg-theme-purple-primary border border-theme-purple-secondary align-middle py-2 items-center rounded-xl ${isLoading?"bg-theme-gray-secondary":"bg-theme-purple-primary"}`}>{!isLoading?"Apply Changes":<img className={`${!isLoading?"animate-spin":"animate-spin"} size-6`} src={Cube}></img>}</button>
     </div>
     </>
 };

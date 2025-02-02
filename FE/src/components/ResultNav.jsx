@@ -4,7 +4,7 @@ import copy from "../assets/copy.svg"
 import deploy from "../assets/Frame.svg"
 import download from "../assets/download.svg"
 
-export default function ResultNav(){
+export default function ResultNav({onCopy, onDownload}){
 
     const [isPreviewing, setIsPreviewing] = useRecoilState(previewStateAtom);
 
@@ -16,9 +16,9 @@ export default function ResultNav(){
             </div>
             <div className="flex gap-2.5">
                 {isPreviewing?
-                    <button className="text-white px-0.5 border-[#313030] border rounded-xl"><img className="size-10" src={copy}/></button>
+                    <button onClick={onCopy} className="text-white px-0.5 border-[#313030] border rounded-xl"><img className="size-10" src={copy}/></button>
                 :null}
-                <button className="text-white px-0.5 border-[#313030] border rounded-xl"><img className="size-10"src={download}/></button>
+                <button onClick={onDownload} className="text-white px-0.5 border-[#313030] border rounded-xl"><img className="size-10"src={download}/></button>
                 <button className="flex items-center gap-1 text-white px-2 py-1 border-theme-purple-secondary bg-theme-purple-primary border rounded-xl"><p className="text-base leading-4">Publish</p><img className="size-6" src={deploy}/></button>
             </div>
         </div>

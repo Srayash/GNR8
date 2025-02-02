@@ -28,10 +28,7 @@ export function PromptBar() {
           Authorization: "Bearer " + localStorage.getItem("token")
         }
       });
-  
-      console.log(response.data);
-  
-      setPrediction(response.data.data.prediction);
+      setPrediction(response.data.data[0]);
       navigate("/result");
     } catch (error) {
       console.error("Error fetching data:", error);
