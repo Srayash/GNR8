@@ -29,7 +29,7 @@ export function SignUpModal() {
         confirmPassword,
       });
       const authHeader = response.headers.getAuthorization();
-      const token = toString(authHeader.split(" ")[1]);
+      const token = authHeader.split(" ")[1];
       if(!authHeader){
         navigate("/signin");
       }

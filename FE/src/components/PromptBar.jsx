@@ -5,10 +5,12 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { predictionStateAtom } from "../store/atoms/predictionState";
 import { useNavigate } from "react-router-dom";
 import { predictionLoadingStateAtom } from "../store/atoms/predictionLoadingState";
+import { errorStateAtom } from "../store/atoms/errorState";
 
 export function PromptBar() {
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useRecoilState(predictionLoadingStateAtom);
+  const [errorState, setErrorState] = useRecoilState(errorStateAtom);
   const navigate = useNavigate();
   const setPrediction = useSetRecoilState(predictionStateAtom);
 
@@ -34,6 +36,16 @@ export function PromptBar() {
     } catch (error) {
       console.error("Error fetching data:", error);
       navigate("/signin");
+      setErrorState({
+        visible: true,
+        text: "Sign in to continue GNR8ing",
+      });
+      setTimeout(() => {
+        setErrorState({
+          visible: false,
+          text: "",
+        });
+      }, 5000);
     } finally {
       setIsLoading(false);
     }
