@@ -8,7 +8,4 @@ langchain-groq
 langchain
 requests
 python-dotenv
-re
 urllib3
-os
-pickle
