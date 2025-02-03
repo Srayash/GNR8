@@ -5,7 +5,7 @@ import parseContent from "../utils/parserFunction";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { predictionStateAtom } from '../store/atoms/predictionState';
 import WebsitePreview from "../components/WebsitePreview";
-import CodeEditor from "../components/CodeEditor";
+import CodeEditor from "../components/codeEditor";
 import ResultNav from "../components/resultNav";
 import { previewStateAtom } from "../store/atoms/previewState";
 import ResultSideBar from "../components/ResultSideBar";
