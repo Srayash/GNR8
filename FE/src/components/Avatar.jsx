@@ -1,5 +1,4 @@
-export function Avatar() {
-    // Retrieve the name from localStorage
+export function Avatar({handleLogout}) {
     const storedName = localStorage.getItem("name");
   
     // Initialize default values
@@ -21,6 +20,9 @@ export function Avatar() {
             {initial}
           </div>
         </div>
+        <button onClick={handleLogout} className="px-3 py-2 bg-theme-gray-primary border-[1px] rounded-xl border-[#313030] text-theme-gray-secondary">
+          logout
+        </button>
       </div>
     );
   }
