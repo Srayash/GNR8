@@ -38,21 +38,19 @@
 ### Installation
 bash
 # Clone the repository
-git clone https://github.com/your-username/auto-website-generator.git
-frontend
-cd into FE cd FE
-install dependencies npm i
-run in dev mode npm run dev
-backend
-Run The Model Prior to starting the BE service
-cd into BE cd BE
-install dependencies npm i
-run backend node index.js
-Model
-cd into Model cd Model
-run Model uvicorn main:app --reload
-# Install dependencies
-pip install -r requirements.txt
+git clone https://github.com/your-username/auto-website-generator.git<br>
+cd FE<br>
+npm i<br>
+npm run dev<br>
+Run The Model Prior to starting the BE service<br>
+cd BE<br>
+npm i<br>
+node index.js<br>
+Model<br>
+cd Model<br>
+uvicorn main:app --reload<br>
+# Install dependencies<br>
+pip install -r requirements.txt<br>
 
 
 ### Usage
@@ -63,7 +61,7 @@ python main.py
 - The system will process, generate, and deploy the website automatically.
 
 ## Project Structure
-
+<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/169180900/409227764-3b7abacc-d289-4b43-b8e2-3b5200d8b0f2.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250203%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250203T182104Z&X-Amz-Expires=300&X-Amz-Signature=27cd329a2ed051e52f71e05fe78964cd7e4fb0d46bcb2a2aa0c37209b8197fae&X-Amz-SignedHeaders=host" alt="flow chart">
 <br>
 
 BE<br>
