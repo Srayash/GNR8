@@ -10,6 +10,8 @@ require("dotenv").config();
 
 const app = express();
 
+const beUrl = process.env.BE_URL || "http://localhost:3000";
+
 const dbURI = process.env.DB_URL;
 mongoose
   .connect(dbURI)
@@ -67,7 +69,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/auth/google/callback",
+      callbackURL: `${beUrl}/auth/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -117,7 +119,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/auth/github/callback",
+      callbackURL: `${beUrl}/auth/github/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {

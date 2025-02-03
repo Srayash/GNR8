@@ -8,6 +8,11 @@ import { predictionLoadingStateAtom } from "../store/atoms/predictionLoadingStat
 import { errorStateAtom } from "../store/atoms/errorState";
 
 export function PromptBar() {
+
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+const beUrl = isLocal ? 'http://localhost:8000' : 'https://gnr8-be.onrender.com';
+
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useRecoilState(predictionLoadingStateAtom);
   const [errorState, setErrorState] = useRecoilState(errorStateAtom);
@@ -21,7 +26,7 @@ export function PromptBar() {
     setPrompt("");
   
     try {
-      const response = await axios.post("http://localhost:3000/api/v1/generate/", {
+      const response = await axios.post(`${beUrl}/api/v1/generate/`, {
         prompt
       }, {
         headers: {

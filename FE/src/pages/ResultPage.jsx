@@ -18,6 +18,10 @@ import { PublishModal } from "../components/PublishModal";
 
 export function ResultPage(){
 
+
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+  const beUrl = isLocal ? 'http://localhost:8000' : 'https://gnr8-be.onrender.com';
   const [files, setFiles] = useState([]);
   const [publishModal, setPublishModal] = useRecoilState(publishModalStateAtom);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -107,7 +111,7 @@ export function ResultPage(){
         return;
       }
   
-      const response = await axios.post("http://localhost:3000/api/v1/deploy", requestBody, {
+      const response = await axios.post(`${beUrl}/api/v1/deploy`, requestBody, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token")
         }

@@ -12,6 +12,10 @@ import axios from "axios";
 
 export default function Toolbar(){
 
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+  const beUrl = isLocal ? 'http://localhost:8000' : 'https://gnr8-be.onrender.com';
+
     const [selectedOption, setSelectedOption] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [fontSize, setFontSize] = useState("");
@@ -46,7 +50,7 @@ export default function Toolbar(){
       setPrompt("");
     
       try {
-        const response = await axios.post("http://localhost:3000/api/v1/generate/improvement", {
+        const response = await axios.post(`${beUrl}/api/v1/generate/improvement`, {
           prompt
         }, {
           headers: {

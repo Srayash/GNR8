@@ -11,19 +11,23 @@ import { userStateAtom } from "../store/atoms/userState";
 
 export function SignUpModal() {
 
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+  const beUrl = isLocal ? 'http://localhost:8000' : 'https://gnr8-be.onrender.com';
+
   const [userState, setUserState] = useRecoilState(userStateAtom);
 
   async function handleGitHubLogin(){
-    window.location.href = 'http://localhost:3000/auth/github';
+    window.location.href = `${beUrl}/auth/github`;
   }
 
   async function  handleGoogleLogin(){
-    window.location.href = 'http://localhost:3000/auth/google';
+    window.location.href = `${beUrl}/auth/google`;
   }
 
   async function handleSignup(){
     try {
-      const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
+      const response = await axios.post(`${beUrl}/api/v1/user/signup`, {
         email,
         password,
         confirmPassword,

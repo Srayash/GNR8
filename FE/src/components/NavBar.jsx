@@ -2,6 +2,9 @@ import { useNavigate } from "react-router-dom"
 import logo from "../assets/GNR8.svg"
 import { Avatar } from "./Avatar";
 import axios from "axios";
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+const beUrl = isLocal ? 'http://localhost:8000' : 'https://gnr8-be.onrender.com';
 
 export function NavBar(){
 
@@ -10,7 +13,7 @@ export function NavBar(){
 
     const handleLogout = async () => {
       try {
-        await axios.delete('http://localhost:3000/api/v1/user/signout', {
+        await axios.delete(`${beUrl}api/v1/user/signout`, {
           withCredentials: true,
         });
         localStorage.clear();

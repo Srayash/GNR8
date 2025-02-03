@@ -10,6 +10,10 @@ import { predictionStateAtom } from "../store/atoms/predictionState";
 import { errorStateAtom } from "../store/atoms/errorState";
 
 export default function ResultSideBar({ brief }) {
+
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+  const beUrl = isLocal ? 'http://localhost:8000' : 'https://gnr8-be.onrender.com';
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
@@ -35,7 +39,7 @@ export default function ResultSideBar({ brief }) {
     setPrompt("");
   
     try {
-      const response = await axios.post("http://localhost:3000/api/v1/generate/improvement", {
+      const response = await axios.post(`${beUrl}/api/v1/generate/improvement`, {
         prompt
       }, {
         headers: {

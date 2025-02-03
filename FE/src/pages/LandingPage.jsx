@@ -14,9 +14,13 @@ export function LandingPage(){
     const [userState, setUserState] = useRecoilState(userStateAtom);
     const [error, setError] = useRecoilState(errorStateAtom);
 
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+    const beUrl = isLocal ? 'http://localhost:8000' : 'https://gnr8-be.onrender.com';
+
     useEffect(() => {
         // Use Axios instead of fetch
-            axios.get("http://localhost:3000/api/v1/user_data", {
+            axios.get(`${beUrl}/api/v1/user_data`, {
                 withCredentials: true, 
               })
               .then((response) => {
