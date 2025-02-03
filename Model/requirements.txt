@@ -1,6 +1,8 @@
 fastapi
 uvicorn
 pydantic
+--upgrade pip setuptools wheel
+
 pickle5
 crewai
 crewai_tools
