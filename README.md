@@ -61,7 +61,8 @@ python main.py
 - The system will process, generate, and deploy the website automatically.
 
 ## Project Structure
-<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/169180900/409227764-3b7abacc-d289-4b43-b8e2-3b5200d8b0f2.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250203%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250203T182104Z&X-Amz-Expires=300&X-Amz-Signature=27cd329a2ed051e52f71e05fe78964cd7e4fb0d46bcb2a2aa0c37209b8197fae&X-Amz-SignedHeaders=host" alt="flow chart">
+<img src="https://github.com/user-attachments/assets/76793670-f890-48f0-b739-ac11c806f35b" alt="flow chart">
+
 <br>
 
 BE<br>
