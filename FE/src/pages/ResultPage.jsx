@@ -11,11 +11,15 @@ import { previewStateAtom } from "../store/atoms/previewState";
 import ResultSideBar from "../components/ResultSideBar";
 import { ErrorBlob } from "../components/ErrorBlob";
 import JSZip from "jszip";
+import axios from "axios";
 import { errorStateAtom } from "../store/atoms/errorState";
+import { publishModalStateAtom } from "../store/atoms/publishModalState";
+import { PublishModal } from "../components/PublishModal";
 
 export function ResultPage(){
 
   const [files, setFiles] = useState([]);
+  const [publishModal, setPublishModal] = useRecoilState(publishModalStateAtom);
   const [selectedFile, setSelectedFile] = useState(null);
   const isPreviewing = useRecoilValue(previewStateAtom);
   const [error, setError] = useRecoilState(errorStateAtom);
@@ -71,13 +75,71 @@ export function ResultPage(){
     .catch(err => console.error("Error generating ZIP file: ", err));
   }
 
+  const onPublish = async () => {
+
+    try {
+
+      setError({
+        visible: true,
+        text: "Please wait a few Minutes, Your website is being deployed!",
+      });
+  
+      setTimeout(() => {
+        setError({ visible: false, text: "" });
+      }, 3000);
+
+      const requestBody = {
+        files: files.map(file => ({
+          name: file.name,
+          content: file.content
+        }))
+      };
+
+      if (!files || files.length === 0 || !files.some(file => file.content && file.content.trim() !== "")) {
+        setError({
+          visible: true,
+          text: "No valid files to deploy! At least one file must contain content.",
+        });
+  
+        setTimeout(() => {
+          setError({ visible: false, text: "" });
+        }, 3000);
+        return;
+      }
+  
+      const response = await axios.post("http://localhost:3000/api/v1/deploy", requestBody, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token")
+        }
+      });
+  
+      if (response.data.success) {
+        setPublishModal({ visible: true, url: response.data.url });
+  
+        console.log("Website Published at:", response.data.url);
+      } else {
+        throw new Error(response.data.error || "Failed to deploy site");
+      }
+    } catch (err) {
+      console.error("Error publishing website:", err);
+      setError({
+        visible: true,
+        text: `Failed to publish website. Please try again! ${err}`,
+      });
+  
+      setTimeout(() => {
+        setError({ visible: false, text: "" });
+      }, 3000);
+    }
+  };
+  
   return <>
     <div className="w-screen h-screen overflow-hidden flex flex-col">
       {/* <NavBar /> */}
       <div className="flex flex-1">
         <ResultSideBar props={fileContent} />
         <div className="flex flex-1 flex-col">
-          <ResultNav onCopy={onCopy} onDownload={onDownload} />
+          <ResultNav onCopy={onCopy} onDownload={onDownload} onPublish={onPublish} />
           {!isPreviewing?<WebsitePreview />:
           <div className="flex flex-1">
             <FileExplorer prop={files} setUseState={setSelectedFile}/>
@@ -87,6 +149,7 @@ export function ResultPage(){
         </div>
       </div>
       <ErrorBlob message={error.text} />
+      <PublishModal />
     </div>
   </>
 }
