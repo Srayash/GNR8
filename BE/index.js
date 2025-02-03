@@ -257,4 +257,4 @@ app.get("/session-test", (req, res) => {
   res.json({ session: req.session });
 });
 
-app.listen(3000);
+app.listen(3000 || process.env.PORT);

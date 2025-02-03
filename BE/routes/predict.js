@@ -12,6 +12,8 @@ const followUpBody = z.object({
     prompt: z.string().min(1, "Improvement prompt Can't be empty"),
 })
 
+const modelUrl = process.env.MODEL_URL || 'http://localhost:8000';
+
 router.post("/",authMiddleware,async (req, res) => {
         const validation = predictBody.safeParse(req.body);
         if (!validation.success) {
@@ -24,7 +26,7 @@ router.post("/",authMiddleware,async (req, res) => {
         const { prompt } = req.body;
     
         try {
-            const { data } = await axios.post("http://localhost:8000/predict/", { prompt });
+            const { data } = await axios.post(`${modelUrl}/predict/`, { prompt });
     
             return res.status(200).json({
                 message: "Prediction successful",
@@ -52,7 +54,7 @@ router.post("/improvement", authMiddleware, async(req,res)=>{
     const {prompt} = req.body;
 
     try{
-        const {data} = await axios.post("http://localhost:8000/followup/", {prompt});
+        const {data} = await axios.post(`${modelUrl}/followup/`, {prompt});
 
         return res.status(200).json({
             message: "Prediction Succesfull",
