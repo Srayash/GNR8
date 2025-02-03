@@ -11,6 +11,7 @@ require("dotenv").config();
 const app = express();
 
 const beUrl = process.env.BE_URL || "http://localhost:3000";
+const feUrl = process.env.FE_URL || "http://localhost:5173";
 
 const dbURI = process.env.DB_URL;
 mongoose
@@ -19,7 +20,7 @@ mongoose
   .catch((err) => console.log(err));
 
 const corsOptions = {
-    origin: ["http://localhost:5173"],
+    origin: [`${feUrl}`],
     exposedHeaders: 'Authorization',
     credentials: true, // Include cookies in requests
 };
@@ -108,7 +109,7 @@ app.get(
   (req, res) => {
     // Successful authentication, redirect home.
     req.session.user = req.user;
-    res.redirect("http://localhost:5173/");
+    res.redirect(`${feUrl}/`);
   }
 );
 
@@ -176,7 +177,7 @@ app.get(
     req.session.user = req.user;
     // res.setHeader("Authorization", `Bearer ${req.user}`);
     console.log(req.user)
-    res.redirect("http://localhost:5173/");
+    res.redirect(`${feUrl}`);
   }
 );
 
