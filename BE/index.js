@@ -213,6 +213,25 @@ app.post(
   }
 );
 
+app.delete('/api/v1/user/signout', (req, res, next) => {
+  // Passport’s req.logout now accepts a callback
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    // Optionally destroy the session
+    req.session.destroy((err) => {
+      if (err) {
+        return next(err);
+      }
+      // Clear the session cookie if necessary (adjust the cookie name to match your setup)
+      res.clearCookie('connect.sid');
+      // Send a JSON response confirming logout
+      res.status(200).json({ message: 'Logged out successfully' });
+    });
+  });
+});
+
 app.get("/api/v1/user_data", (req, res) => {
   if (req.isAuthenticated()) {
     // If the user is authenticated, send back the user data
