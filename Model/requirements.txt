@@ -1,1 +1,14 @@
+fastapi
 uvicorn
+pydantic
+pickle5
+crewai
+crewai_tools
+langchain-groq
+langchain
+requests
+python-dotenv
+re
+urllib3
+os
+pickle
