@@ -6,19 +6,9 @@ from dotenv import load_dotenv
 import time
 
 
+load_dotenv()
 # Setting an environment variable
-os.environ['GROQ_API_KEY'] = "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"
-os.environ['ANTHROPIC_API_KEY'] = "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"
-
 groq_api_key = os.environ['GROQ_API_KEY']
-anthropic_api_key = os.environ['ANTHROPIC_API_KEY']
-
-# Initialize the Claude LLM
-claude_llm = LLM(
-    model="claude-3-5-sonnet-20240620",
-    max_tokens=8000,
-    api_key=os.getenv("ANTHROPIC_API_KEY")
-)
 
 # Initialize the ChatGroq LLM
 groq_llm = ChatGroq(
@@ -39,7 +29,6 @@ groq_llm1 = ChatGroq(
 class IntegratedAgents:
     def __init__(self):
         self.groq_llm = groq_llm
-        self.claude_llm = claude_llm
         self.groq_llm1 = groq_llm1  
 
     def feedback_to_prompt_agent(self):
@@ -79,7 +68,7 @@ class IntegratedAgents:
                 Your goal is to ensure all requested changes are applied while maintaining high code quality.
             """,
             verbose=True,
-            llm=self.claude_llm,
+            llm=self.groq_llm,
             max_iter=2,
         )
 

@@ -4,18 +4,14 @@ import os
 from crewai import Agent
 from langchain_groq import ChatGroq
 from crewai import LLM
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Setting an environment variable
-os.environ['GROQ_API_KEY'] = "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"
 
 groq_api_key = os.environ['GROQ_API_KEY']
 
-# Initialize the Claude LLM
-claude_llm = LLM(
-    model="claude-3-5-sonnet-20240620",
-    max_tokens=8000,
-    api_key="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"
-)
 
 # Initialize the ChatGroq LLM
 groq_llm = ChatGroq(
@@ -35,7 +31,6 @@ UNSPLASH_ACCESS_KEY = "u3S82B9LHB-bzfMamMNDVGqw-fUWPD0m8_yc9-dEgJc"
 class WebsiteCreaterAgents:
     def __init__(self):
         self.groq_llm = groq_llm
-        self.claude_llm = claude_llm
         self.groq_llm1 = groq_llm1
 
     
@@ -148,7 +143,7 @@ class WebsiteCreaterAgents:
                 As an HTML, CSS, and JS Code Writer, you specialize in transforming user requirements into fully functional and visually appealing web pages. You follow modern development standards, ensuring accessibility, responsiveness, and clean code.
             """,
             verbose=True,
-            llm=self.claude_llm,
+            llm=self.groq_llm,
             max_iter=2,
         )
 
@@ -184,7 +179,7 @@ class WebsiteCreaterAgents:
                 As a Readme Generator Agent, your job is to analyze codebases, extract relevant metadata, and create comprehensive documentation for better project understanding and usability.
             """,
             verbose=True,
-            llm=self.claude_llm,
+            llm=self.groq_llm,
             max_iter=1,
         )
     
@@ -201,7 +196,7 @@ class WebsiteCreaterAgents:
                 a context-relevant image by producing accurate, short keyword lists.
             """,
             verbose=True,
-            llm=self.claude_llm,
+            llm=self.groq_llm,
             max_iter=2,
         )
 
