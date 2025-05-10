@@ -5,8 +5,8 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const passport = require("passport");
 const dotenv = require("dotenv").config();
-const authMiddleware = require("./middleware/authMiddleware");
 const User = require("./models/userModel");
+const { authMiddleware } = require("./middleware/authMiddleware");
 require("dotenv").config();
 
 const app = express();
@@ -235,7 +235,7 @@ app.delete('/api/v1/user/signout', (req, res, next) => {
   });
 });
 
-router.get("/user_data", authMiddleware, async (req, res) => {
+app.get("/user_data", authMiddleware, async (req, res) => {
   //     if (req.isAuthenticated()) {
   //   // If the user is authenticated, send back the user data
   //   // console.log(req.user.name);
