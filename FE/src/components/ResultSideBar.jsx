@@ -39,6 +39,7 @@ export default function ResultSideBar({ brief }) {
       const response = await axios.post(`${BASE_BE_URL}/generate/improvement`, {
         prompt
       }, {
+        withCredentials:true,
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token")
         }

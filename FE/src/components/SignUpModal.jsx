@@ -25,10 +25,12 @@ export function SignUpModal() {
 
   async function handleSignup(){
     try {
-      const response = await axios.post(`${BASE_BE_URL}/user/signup`, {
+      const response = await axios.post(`${BASE_BE_URL}/user/signup`,{
         email,
         password,
         confirmPassword,
+      },{
+        withCredentials:true
       });
       const authHeader = response.headers.getAuthorization();
       const token = authHeader.split(" ")[1];

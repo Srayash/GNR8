@@ -28,6 +28,7 @@ export function PromptBar() {
         `${BASE_BE_URL}/generate/`,
         { prompt },
         {
+          withCredentials: true,
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
