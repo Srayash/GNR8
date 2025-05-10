@@ -9,7 +9,8 @@ const User = require("./models/userModel");
 require("dotenv").config();
 
 const app = express();
-
+const BASE_BE_URL = process.env.BE_URL || "http://localhost:3000";
+const BASE_FE_URL = process.env.FE_URL || "http://localhost:5173";
 const dbURI = process.env.DB_URL;
 mongoose
   .connect(dbURI)
@@ -17,7 +18,7 @@ mongoose
   .catch((err) => console.log(err));
 
 const corsOptions = {
-    origin: ["http://localhost:5173"],
+    origin: [`${BASE_FE_URL}`],
     exposedHeaders: 'Authorization',
     credentials: true, // Include cookies in requests
 };
@@ -67,7 +68,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/auth/google/callback",
+      callbackURL: `${BASE_BE_URL}/auth/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -106,7 +107,7 @@ app.get(
   (req, res) => {
     // Successful authentication, redirect home.
     req.session.user = req.user;
-    res.redirect("http://localhost:5173/");
+    res.redirect(`${BASE_FE_URL}/`);
   }
 );
 
@@ -117,7 +118,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/auth/github/callback",
+      callbackURL: `${BASE_BE_URL}/auth/github/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -174,7 +175,7 @@ app.get(
     req.session.user = req.user;
     // res.setHeader("Authorization", `Bearer ${req.user}`);
     console.log(req.user)
-    res.redirect("http://localhost:5173/");
+    res.redirect(`${BASE_FE_URL}`);
   }
 );
 
