@@ -18,10 +18,11 @@ mongoose
   .catch((err) => console.log(err));
 
 const corsOptions = {
-    origin: [`${BASE_FE_URL}`],
-    exposedHeaders: 'Authorization',
-    credentials: true, // Include cookies in requests
+  origin: BASE_FE_URL,
+  credentials: true,
+  exposedHeaders: ["Authorization"],
 };
+
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -31,10 +32,10 @@ const mainRouter = require("./routes/index");
 // Session middleware
 app.use(
     session({
-      secret: process.env.SESSION_SECRET, // Replace with a strong secret
+      secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
-      cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }, // Use `true` only with HTTPS
+      cookie: { secure: true, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 },
     })
   );
   
