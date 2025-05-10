@@ -12,6 +12,8 @@ import axios from "axios";
 
 export default function Toolbar(){
 
+    const BASE_BE_URL = import.meta.env.VITE_BE_URL || "http://localhost:3000/api/v1"
+
     const [selectedOption, setSelectedOption] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [fontSize, setFontSize] = useState("");
@@ -46,7 +48,7 @@ export default function Toolbar(){
       setPrompt("");
     
       try {
-        const response = await axios.post("http://localhost:3000/api/v1/generate/improvement", {
+        const response = await axios.post(`${BASE_BE_URL}/generate/improvement`, {
           prompt
         }, {
           headers: {

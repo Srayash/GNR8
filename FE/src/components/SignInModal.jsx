@@ -11,6 +11,8 @@ import { userStateAtom } from "../store/atoms/userState";
 
 export function SignInModal() {
 
+  const BASE_BE_URL = import.meta.env.VITE_BE_URL || "http://localhost:3000/api/v1"
+  const BE_URL_WO_V = import.meta.env.VITE_URL_WO_V || "http://localhost:3000"
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,18 +22,18 @@ export function SignInModal() {
 
 
   async function handleGitHubLogin(){
-    window.location.href = 'http://localhost:3000/auth/github';
+    window.location.href = `${BE_URL_WO_V}/auth/github`;
   }
 
   async function  handleGoogleLogin(){
-    window.location.href = 'http://localhost:3000/auth/google';
+    window.location.href = `${BE_URL_WO_V}/auth/google`;
   }
 
   async function handleSignin() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/user/signin",
+        `${BASE_BE_URL}/user/signin`,
         {
           email,
           password,

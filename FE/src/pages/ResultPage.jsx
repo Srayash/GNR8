@@ -5,7 +5,7 @@ import parseContent from "../utils/parserFunction";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { predictionStateAtom } from '../store/atoms/predictionState';
 import WebsitePreview from "../components/WebsitePreview";
-import CodeEditor from "../components/CodeEditor";
+import CodeEditor from "../components/codeEditor";
 import ResultNav from "../components/resultNav";
 import { previewStateAtom } from "../store/atoms/previewState";
 import ResultSideBar from "../components/ResultSideBar";
@@ -23,7 +23,7 @@ export function ResultPage(){
   const [selectedFile, setSelectedFile] = useState(null);
   const isPreviewing = useRecoilValue(previewStateAtom);
   const [error, setError] = useRecoilState(errorStateAtom);
-
+  const BASE_BE_URL = import.meta.env.VITE_BE_URL || "http://localhost:3000/api/v1"
   const prediction = useRecoilValue(predictionStateAtom);
   const fileContent = parseContent(prediction);
 
@@ -107,7 +107,7 @@ export function ResultPage(){
         return;
       }
   
-      const response = await axios.post("http://localhost:3000/api/v1/deploy", requestBody, {
+      const response = await axios.post(`${BASE_BE_URL}/deploy`, requestBody, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token")
         }

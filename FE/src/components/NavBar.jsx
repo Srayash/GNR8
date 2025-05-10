@@ -5,12 +5,14 @@ import axios from "axios";
 
 export function NavBar(){
 
+    const BASE_BE_URL = import.meta.env.VITE_BE_URL || "http://localhost:3000/api/v1"
+
     const navigate = useNavigate();
     const initial = localStorage.getItem("name");
 
     const handleLogout = async () => {
       try {
-        await axios.delete('http://localhost:3000/api/v1/user/signout', {
+        await axios.delete(`${BASE_BE_URL}/user/signout`, {
           withCredentials: true,
         });
         localStorage.clear();

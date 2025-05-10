@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState } from "react";
 import arrowLeft from "../assets/arrow_fwd.svg";
 import axios from "axios";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -9,9 +9,10 @@ import { errorStateAtom } from "../store/atoms/errorState";
 import RadarLoader from "./RadarLoader";
 
 export function PromptBar() {
+  const BASE_BE_URL = import.meta.env.VITE_BE_URL || "http://localhost:3000/api/v1"
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useRecoilState(predictionLoadingStateAtom);
-  const [errorState, setErrorState] = useRecoilState(errorStateAtom);
+  const setErrorState = useSetRecoilState(errorStateAtom);
   const navigate = useNavigate();
   const setPrediction = useSetRecoilState(predictionStateAtom);
 
@@ -24,7 +25,7 @@ export function PromptBar() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/generate/",
+        `${BASE_BE_URL}/generate/`,
         { prompt },
         {
           headers: {

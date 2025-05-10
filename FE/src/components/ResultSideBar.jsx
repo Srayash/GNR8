@@ -10,6 +10,7 @@ import { predictionStateAtom } from "../store/atoms/predictionState";
 import { errorStateAtom } from "../store/atoms/errorState";
 
 export default function ResultSideBar({ brief }) {
+  const BASE_BE_URL = import.meta.env.VITE_BE_URL || "http://localhost:3000/api/v1"
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
@@ -35,7 +36,7 @@ export default function ResultSideBar({ brief }) {
     setPrompt("");
   
     try {
-      const response = await axios.post("http://localhost:3000/api/v1/generate/improvement", {
+      const response = await axios.post(`${BASE_BE_URL}/generate/improvement`, {
         prompt
       }, {
         headers: {
