@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { predictionStateAtom } from '../store/atoms/predictionState';
 import WebsitePreview from "../components/WebsitePreview";
 import CodeEditor from "../components/codeEditor";
-import ResultNav from "../components/resultNav";
+import ResultNav from "../components/ResultNav";
 import { previewStateAtom } from "../store/atoms/previewState";
 import ResultSideBar from "../components/ResultSideBar";
 import { ErrorBlob } from "../components/ErrorBlob";
