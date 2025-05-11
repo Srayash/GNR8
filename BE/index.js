@@ -30,14 +30,21 @@ app.use(express.json());
 const mainRouter = require("./routes/index");
 
 // Session middleware
+app.set("trust proxy", 1); // ← REQUIRED for secure cookies on Render
+
 app.use(
-    session({
-      secret: process.env.SESSION_SECRET,
-      resave: false,
-      saveUninitialized: false,
-      cookie: { secure: true, httpOnly: true, sameSite:"none", maxAge: 24 * 60 * 60 * 1000 },
-    })
-  );
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: true,
+      httpOnly: true,
+      sameSite: "none",
+      maxAge: 24 * 60 * 60 * 1000,
+    },
+  })
+);
   
   // Passport.js initialization
   app.use(passport.initialize());
@@ -208,7 +215,7 @@ const signupBody = z.object({
     confirmPassword: z.string(),
 });
 
-app.post("/signup", async (req, res) => {
+app.post("/api/v1/user/signup", async (req, res) => {
     const { success } = signupBody.safeParse(req.body);
     if (!success) {
         return res.status(400).json({ message: "Invalid inputs" });
