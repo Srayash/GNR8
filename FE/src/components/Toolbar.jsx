@@ -52,9 +52,6 @@ export default function Toolbar(){
           prompt
         }, {
           withCredentials: true,
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token")
-          }
         });
         setPrediction(response.data.data.updated_code);
         

@@ -29,9 +29,6 @@ export function PromptBar() {
         { prompt },
         {
           withCredentials: true,
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
         }
       );
 

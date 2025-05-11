@@ -40,9 +40,6 @@ export default function ResultSideBar({ brief }) {
         prompt
       }, {
         withCredentials:true,
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token")
-        }
       });
       setPrediction(response.data.data.updated_code);
       

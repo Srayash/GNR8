@@ -295,4 +295,9 @@ app.get("/session-test", (req, res) => {
   res.json({ session: req.session });
 });
 
+app.get("/healthz", (req, res) => {
+  res.status(200).send("OK");
+}
+);
+
 app.listen(3000);
