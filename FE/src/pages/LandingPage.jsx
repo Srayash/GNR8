@@ -23,9 +23,6 @@ export function LandingPage(){
               })
               .then((response) => {
                 const data = response.data;
-                const authHeader = response.headers.getAuthorization(); 
-                const token = authHeader.split(" ")[1];
-                localStorage.setItem("token", token);
                 localStorage.setItem("name", data.name);
               })
               .catch((err) => {
