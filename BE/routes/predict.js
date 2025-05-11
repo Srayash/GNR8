@@ -2,7 +2,6 @@ const express = require("express");
 const z = require("zod");
 const axios = require("axios");
 const dotenv = require("dotenv");
-const { authMiddleware } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 dotenv.config();
@@ -18,7 +17,10 @@ const followUpBody = z.object({
     prompt: z.string().min(1, "Improvement prompt Can't be empty"),
 })
 
-router.post("/",authMiddleware,async (req, res) => {
+router.post("/",async (req, res) => {
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: "Not authenticated" });
+        }
         const validation = predictBody.safeParse(req.body);
         if (!validation.success) {
             return res.status(400).json({
@@ -46,7 +48,10 @@ router.post("/",authMiddleware,async (req, res) => {
         }
 });
 
-router.post("/improvement", authMiddleware, async(req,res)=>{
+router.post("/improvement", async(req,res)=>{
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
+    }
     const validation = followUpBody.safeParse(req.body);
     if(!validation.success) {
         return res.status(400).json({
