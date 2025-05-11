@@ -60,14 +60,22 @@ async def predict_text(request: PromptRequest):
     """Predict website code from user input prompt."""
     prompt = request.prompt
 
-    # Perform prediction
     try:
         output = model.predict(prompt)
+
+    except litellm.RateLimitError as e:
+        error_message = str(e)
+        if "rate limit reached" in error_message.lower() or "Rate limit reached for model" in error_message:
+            raise HTTPException(status_code=429, detail="LLM_API_KEY reached")
+        else:
+            raise HTTPException(status_code=500, detail=f"Unexpected RateLimitError: {error_message}")
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Model prediction failed: {str(e)}")
 
     followup_cache['latest_code'] = output
-    return {output}
+    return {"generated_code": output}
+
 
 
 
