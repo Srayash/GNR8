@@ -1,12 +1,11 @@
 const express = require("express");
 const session = require("express-session");
 const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
+const z = require("zod");
 const cors = require("cors");
 const passport = require("passport");
 const dotenv = require("dotenv").config();
 const User = require("./models/userModel");
-const { authMiddleware } = require("./middleware/authMiddleware");
 require("dotenv").config();
 
 const app = express();
@@ -204,6 +203,46 @@ passport.use(
     }
   )
 );
+
+const signupBody = z.object({
+    email: z.string().email(),
+    password: z.string(),
+    confirmPassword: z.string(),
+});
+
+app.post("/signup", async (req, res) => {
+    const { success } = signupBody.safeParse(req.body);
+    if (!success) {
+        return res.status(400).json({ message: "Invalid inputs" });
+    }
+
+    const { email, password, confirmPassword } = req.body;
+
+    if (password !== confirmPassword) {
+        return res.status(400).json({ message: "Passwords don't match" });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+        return res.status(400).json({ message: "Email already in use" });
+    }
+
+    const user = await User.create({ email, password });
+
+    req.login(user, (err) => {
+        if (err) {
+            return res.status(500).json({ message: "Login after signup failed" });
+        }
+
+        return res.status(201).json({
+            message: "User created and signed in successfully",
+            user: {
+                id: user._id,
+                email: user.email,
+            },
+        });
+    });
+});
 
 app.post(
   "/api/v1/user/signin",
