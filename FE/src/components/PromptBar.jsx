@@ -47,7 +47,7 @@ export function PromptBar() {
 
       setErrorState({
         visible: true,
-        text: isAuthError ? "Sign in to continue GNR8ing" : "Something went wrong. Try again.",
+        text: isAuthError ? "Sign in to continue GNR8ing" : "API key limit reached",
       });
 
       if (isAuthError) {

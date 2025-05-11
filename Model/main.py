@@ -63,14 +63,7 @@ async def predict_text(request: PromptRequest):
     # Perform prediction
     try:
         output = model.predict(prompt)
-
-    except RateLimitError as e:
-        logger.warning("Rate limit exceeded during prediction.")
-        raise HTTPException(
-            status_code=429,
-            detail="Rate limit reached. Please try again later.",
-        )
-    
+        
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Model prediction failed: {str(e)}")
 
