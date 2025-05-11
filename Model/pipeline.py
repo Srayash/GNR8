@@ -16,7 +16,7 @@ groq_api_key = os.environ['GROQ_API_KEY']
 # Initialize the ChatGroq LLM
 groq_llm = ChatGroq(
     #model="groq/llama-3.3-70b-versatile",
-    model="groq/deepseek-r1-distill-llama-70b",
+    model="groq/llama-3.3-70b-versatile",
     api_key=os.getenv("GROQ_API_KEY")
 )
 
