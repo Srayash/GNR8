@@ -1,5 +1,6 @@
 const express = require("express");
 const axios = require("axios");
+const requireAuth = require("../middleware/requireAuth");
 require("dotenv").config();
 
 const router = express.Router();
@@ -58,11 +59,9 @@ async function enableGitHubPages(repoName) {
     );
 }
 
+router.use(requireAuth);
 
 router.post("/", async (req, res) => {
-    if (!req.isAuthenticated()) {
-        return res.status(401).json({ message: "Not authenticated" });
-    }
     try {
         const { files } = req.body;
         if (!files) return res.status(400).json({ error: "Missing files" });
