@@ -43,10 +43,8 @@ app.use(
   app.use(passport.initialize());
   app.use(passport.session());
   
-  app.use(express.json());
-  
   passport.serializeUser((user, done) => {
-    //   console.log("Serializing user with ID:", user.id);
+      console.log("Serializing user with ID:", user.id);
     done(null, user.id);
   });
   
@@ -233,7 +231,7 @@ app.post("/signup", async (req, res) => {
         if (err) {
             return res.status(500).json({ message: "Login after signup failed" });
         }
-
+        console.log("Login successful:", req.session);
         return res.status(201).json({
             message: "User created and signed in successfully",
             user: {
