@@ -235,7 +235,7 @@ app.delete('/api/v1/user/signout', (req, res, next) => {
   });
 });
 
-app.get("api/v1/user_data", authMiddleware, async (req, res) => {
+app.get("/api/v1/user_data", authMiddleware, async (req, res) => {
   //     if (req.isAuthenticated()) {
   //   // If the user is authenticated, send back the user data
   //   // console.log(req.user.name);
