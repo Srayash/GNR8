@@ -235,35 +235,16 @@ app.delete('/api/v1/user/signout', (req, res, next) => {
   });
 });
 
-app.get("/api/v1/user_data", authMiddleware, async (req, res) => {
-  //     if (req.isAuthenticated()) {
-  //   // If the user is authenticated, send back the user data
-  //   // console.log(req.user.name);
-  //   // console.log(req.user.email);
-  //   const token = jwt.sign({
-  //       userId: req.user._id
-  //   }, process.env.JWT_SECRET);
-
-  //   res.setHeader("Authorization", `Bearer ${token}`);
-
-  //   res.json({
-  //     name: req.user.name, // Assuming the user object has a 'name' property
-  //   });
-  // }
-    try {
-        const user = await User.findById(req.userId);
-
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        res.json({
-            email: user.email,
-            id: user._id,
-        });
-    } catch (err) {
-        res.status(500).json({ message: "Internal Server Error" });
+app.get("/api/v1/user_data", (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Not authenticated" });
     }
+
+    res.json({
+        id: req.user._id,
+        email: req.user.email,
+        name: req.user.name,
+    });
 });
 
 app.get("/session-test", (req, res) => {

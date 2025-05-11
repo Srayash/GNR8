@@ -1,8 +1,6 @@
 const express = require("express");
 const z = require("zod");
-const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
-const JWT_SECRET = process.env.JWT_SECRET;
 
 const router = express.Router();
 
@@ -15,42 +13,34 @@ const signupBody = z.object({
 router.post("/signup", async (req, res) => {
     const { success } = signupBody.safeParse(req.body);
     if (!success) {
-        return res.status(411).json({
-            message: "Invalid Inputs",
-        });
+        return res.status(400).json({ message: "Invalid inputs" });
     }
 
-    if (!(req.body.password === req.body.confirmPassword)) {
-        return res.status(411).json({
-            message: "Passwords don't match",
-        });
+    const { email, password, confirmPassword } = req.body;
+
+    if (password !== confirmPassword) {
+        return res.status(400).json({ message: "Passwords don't match" });
     }
 
-    const existingUser = await User.findOne({
-        email: req.body.email,
-    });
-
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-        res.status(411).json({
-            message: "Email already in use.",
-        });
-        return;
+        return res.status(400).json({ message: "Email already in use" });
     }
 
-    const user = await User.create({
-        email: req.body.email,
-        password: req.body.password,
-    });
+    const user = await User.create({ email, password });
 
-    const userId = user._id;
+    req.login(user, (err) => {
+        if (err) {
+            return res.status(500).json({ message: "Login after signup failed" });
+        }
 
-    const token = jwt.sign({ userId }, process.env.JWT_SECRET);
-
-    res.setHeader("Authorization", `Bearer ${token}`);
-
-    res.json({
-        message: "User Created Successfully",
-        name: user.email,
+        return res.status(201).json({
+            message: "User created and signed in successfully",
+            user: {
+                id: user._id,
+                email: user.email,
+            },
+        });
     });
 });
 
