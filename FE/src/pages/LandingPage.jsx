@@ -23,6 +23,7 @@ export function LandingPage(){
               })
               .then((response) => {
                 const data = response.data;
+                console.log(data.name);
                 localStorage.setItem("name", data.name);
               })
               .catch((err) => {
