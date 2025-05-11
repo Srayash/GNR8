@@ -281,8 +281,10 @@ app.delete('/api/v1/user/signout', (req, res, next) => {
 
 app.get("/api/v1/user_data", (req, res) => {
   if (req.isAuthenticated()) {
+    const resName = req.user.name || req.user.email
+    localStorage.setItem("name", resName);
     res.json({
-      name: req.user.name || req.user.email,
+      name: resName,
     });
   } else {
     res.status(401).json({ message: "Not authenticated" });
