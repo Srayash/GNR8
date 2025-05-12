@@ -1,132 +1,75 @@
-# GNR8 - Text to Website Generator
+<h1 align="center">
+  GNR8 Text-to-Website Generator
+</h1>
 
-## Overview
-*GNR8* is an AI-powered framework designed to generate production-ready websites from user input prompts. The system leverages multiple agents to handle tasks such as prompt enhancement, code generation, user interface improvement, and documentation generation. This pipeline automates website creation, ensuring high-quality output while simplifying the process for users.
+<p align="center">
+  <strong>Generate stunning websites from a simple prompt with AI </strong>
+</p>
 
-## Features
-- *Responsible AI:* Implements strict content filtering to ensure that no explicit or inappropriate content is generated, promoting ethical AI usage.
-- *One-Click Publish:* Simplifies deployment with a single click, automatically publishing your website to GitHub along with a comprehensive README.md file.
-- *Intuitive UI:* Offers an easy-to-use interface that allows users to make design changes seamlessly, without needing extensive coding knowledge.
-- *Contextual Dynamic Media:* Enhances user engagement by replacing static placeholders with dynamic media content that adapts based on the website’s context.
+<p align="left">
+  <a href="https://generate-5cp7.onrender.com">GNR8</a> is an open-source AI-powered website generator that converts your ideas into production-ready websites using a multi-agent system. It handles everything—from content safety to prompt enhancement, UI design, media integration, and deployment—all with one input.
+</p>
 
+<div align="center">
 
-## How It Works
+[![GitHub stars](https://img.shields.io/github/stars/Srayash/GNR8?style=social)](https://github.com/Srayash/GNR8/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/Srayash/GNR8?style=social)](https://github.com/Srayash/GNR8/network/members)
 
-1. *User Input:* The user provides a description of the website they want to create.
-2. *Prompt Guardrail Agent:* Ensures the prompt is safe and free from inappropriate content.
-3. *Prompt Enhancement Agent:* Refines and elaborates the user's prompt for better code generation.
+<a href="https://generate-5cp7.onrender.com/">☁️ Live Demo</a> 
 
-4. *Code Generation Agent:* Converts the enhanced prompt into HTML, CSS, and JavaScript code.
+</div>
 
-5. *UI Improvement Agent:* Enhances the UI for responsiveness, design aesthetics, and functionality.
+<div align="center">
+<img src="https://github.com/Srayash/assets_Public/blob/main/GNR8_Demo-min.gif" alt="GNR8 Demo GIF" width="800" height="450" />
+</div>
 
-6. *Image Integration Agent:* Replaces placeholder images with relevant visuals from Unsplash.
+---
 
-7. *Feedback Loop:* Collects feedback to improve the prompt, leading to refined code generation.
+## 🧩 Key Features
 
-8. *Refined Code Generation:* Uses feedback to generate an updated, improved codebase.
+- **🚫 Responsible AI** – Filters unsafe content before processing.
+- **⚡ One-Click Publish** – Deploys to GitHub with auto-generated README.
+- **🖌️ Seamless UI Editing** – Modify your layout and content live, no coding required.
+- **📸 Smart Media Insertion** – Automatically fetches and inserts contextual Unsplash images.
+- **🧠 Multi-Agent Pipeline** – Each agent handles a specific task to improve quality and speed.
+- **🔁 Feedback Loop** – Incorporates user feedback to iteratively improve code.
+- **🌐 Live Preview** – View your deployed website instantly in the browser.
 
-9. *Deployment Agent:* Deploys the website to GitHub and sets up a live preview.
+---
 
-10. *README Generation Agent:* Automatically creates a README.md file documenting the project.
+## 🧠 How It Works
 
-## Getting Started
+1. **User Prompt** → You describe the site.
+2. **Guardrails** → Prompt checked for safety.
+3. **Enhancement** → Prompt is refined for clarity.
+4. **Code Generation** → HTML, CSS, JS created.
+5. **UI Agent** → Designs and styles the interface.
+6. **Media Agent** → Adds contextual images via Unsplash.
+7. **Feedback Agent** → Refines based on feedback.
+8. **Deployment** → Website goes live with GitHub Pages.
 
-### Prerequisites
-- Python 3.x
-- pip for package management
-### Installation
-bash
-# Clone the repository
-git clone https://github.com/your-username/auto-website-generator.git<br>
-cd FE<br>
-npm i<br>
-npm run dev<br>
-Run The Model Prior to starting the BE service<br>
-cd BE<br>
-npm i<br>
-node index.js<br>
-Model<br>
-cd Model<br>
-uvicorn main:app --reload<br>
-# Install dependencies<br>
-pip install -r requirements.txt<br>
+---
 
+## 🚀 Quickstart
 
-### Usage
-bash
-python main.py
+> ⚠️ Prerequisites: Python 3.x, Node.js, `pip`
 
-- Provide a website description when prompted.
-- The system will process, generate, and deploy the website automatically.
+```bash
+# Clone the repo
+cd GNR8
 
-## Project Structure
-<img src="https://github.com/user-attachments/assets/76793670-f890-48f0-b739-ac11c806f35b" alt="flow chart">
+# Frontend
+cd FE
+npm install
+npm run dev
 
-<br>
+# Backend
+cd ../BE
+npm install
+node index.js
 
-BE<br>
-├── middleware<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──authMiddleware.js<br>
-├── models<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──userModel.js<br>
-├── routes<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──deploy.js<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──index.js<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──predict.js<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──user.js<br>
-├── .env.example<br>
-├──.gitignore<br>
-├──index.js<br>
-├──package-lock.json<br>
-└──package.json<br>
-<br>
-FE<br>
-├── public<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──vite.svg<br>
-├──src<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── assets<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── components<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── pages<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──LandingPage.jsx<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──ResultPage.jsx<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──SignIn.jsx<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──SignUp.jsx<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── store/atoms<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──conversationState.js<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──errorState.js<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──predictionLoadingState.js<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──predictionState.js<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──previewState.js<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──publishModalState.js<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──userState.js<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├── store/utils<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──App.jsx        <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──index.css      <br> 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──main.jsx<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──.gitignore        <br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──README.md<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──eslint.config.js<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──index.html<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──package-lock.json<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──package.json<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──postcss.confix.js<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──tailwind.config.js<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──vite.config.js<br>
-├──Model<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──__pycache__<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──venv<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──followup_pipeline.pkl<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──main.py<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──pipeline.py<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──pipeline_followup.py<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──requirements.txt<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──website_creater_pipeline.pkl<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──README.md<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──package-lock.json<br>
-&nbsp;&nbsp;&nbsp;&nbsp;├──website_creator_pipeline.pkl<br>
-        
-## Acknowledgements
-- *LangChain Groq:* Used for language model-based processing and task orchestration.
-- *CrewAI:* Provides the framework for task distribution and agent management.
-- *Unsplash API:* Supplies high-quality images for use in the generated websites.
+# Model
+cd ../Model
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
