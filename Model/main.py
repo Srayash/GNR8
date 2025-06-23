@@ -3,8 +3,8 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import pickle
 
-# Import the class used in the pickle file
-# Replace `pipeline` with the actual module where `WebsiteCreaterPipeline` is defined
+# Import the class used in the pickle file.
+# Replace `pipeline` with the actual module where `WebsiteCreaterPipeline` is defined.
 from pipeline import WebsiteCreaterPipeline
 from pipeline_followup import  FollowUpCodePipeline
 
