@@ -7,7 +7,7 @@
 </p>
 
 <p align="left">
-  <a href="https://generate-5cp7.onrender.com">GNR8</a> is an open-source AI-powered website generator that converts your ideas into production-ready websites using a multi-agent system. It handles everything—from content safety to prompt enhancement, UI design, media integration, and deployment—all with one input.
+  <a href="https://generate-5cp7.onrender.com">GNR8</a> is an open-source AI-powered website generator that converts your ideas into production-ready websites using a multi-agent system. It handles everything—from content safety to prompt enhancement, UI design, media integration,UI improvement and deployment—all with one input.
 </p>
 
 <div align="center">
