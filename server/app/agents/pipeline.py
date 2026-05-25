@@ -3,15 +3,8 @@ import os
 from crewai import Agent, Task, Crew, LLM
 
 groq_api_key = os.environ["GROQ_API_KEY"]
-anthropic_api_key = os.environ["ANTHROPIC_API_KEY"]
+gemini_api_key = os.environ["GEMINI_API_KEY"]
 UNSPLASH_ACCESS_KEY = os.environ["UNSPLASH_ACCESS_KEY"]
-
-# Initialize the Claude LLM
-claude_llm = LLM(
-    model="claude-3-5-sonnet-20240620",
-    max_tokens=8000,
-    api_key=anthropic_api_key,
-)
 
 groq_llm = LLM(
     model="groq/deepseek-r1-distill-llama-70b",
@@ -21,6 +14,12 @@ groq_llm = LLM(
 groq_llm1 = LLM(
     model="groq/llama-3.3-70b-versatile",
     api_key=groq_api_key,
+)
+
+# free LLM providers only — Gemini Flash for heavy code-gen agents
+claude_llm = LLM(
+    model="gemini/gemini-2.0-flash",
+    api_key=gemini_api_key,
 )
 
 class WebsiteCreaterAgents:

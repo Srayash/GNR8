@@ -9,6 +9,6 @@ httpx
 motor
 authlib
 itsdangerous
-crewai[anthropic,litellm]
+crewai[litellm]
 crewai_tools
 langchain_groq
