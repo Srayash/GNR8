@@ -63,6 +63,7 @@ async def predict_text(request: PromptRequest):
     # Perform prediction
     try:
         output = model.predict(prompt)
+        
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Model prediction failed: {str(e)}")
 
@@ -104,6 +105,11 @@ async def generate_reademe():
 
 
     return {"readme": output}
+
+@app.get("/healthz")
+async def health_check():
+    """Health check endpoint."""
+    return {"status": "ok"}
 
 if __name__ == "__main__":
     import uvicorn

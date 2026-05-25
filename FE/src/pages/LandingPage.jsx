@@ -10,20 +10,20 @@ import { ErrorBlob } from "../components/ErrorBlob";
 
 export function LandingPage(){
 
+    const BASE_BE_URL = import.meta.env.VITE_BE_URL || "http://localhost:3000/api/v1"
+
     const [loading,setLoading] = useState(true);
     const [userState, setUserState] = useRecoilState(userStateAtom);
     const [error, setError] = useRecoilState(errorStateAtom);
 
     useEffect(() => {
         // Use Axios instead of fetch
-            axios.get("http://localhost:3000/api/v1/user_data", {
+            axios.get(`${BASE_BE_URL}/user_data`, {
                 withCredentials: true, 
               })
               .then((response) => {
                 const data = response.data;
-                const authHeader = response.headers.getAuthorization(); 
-                const token = authHeader.split(" ")[1];
-                localStorage.setItem("token", token);
+                console.log(data.name);
                 localStorage.setItem("name", data.name);
               })
               .catch((err) => {

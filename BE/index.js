@@ -1,7 +1,7 @@
 const express = require("express");
 const session = require("express-session");
 const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
+const z = require("zod");
 const cors = require("cors");
 const passport = require("passport");
 const dotenv = require("dotenv").config();
@@ -9,7 +9,8 @@ const User = require("./models/userModel");
 require("dotenv").config();
 
 const app = express();
-
+const BASE_BE_URL = process.env.BE_URL || "http://localhost:3000";
+const BASE_FE_URL = process.env.FE_URL || "http://localhost:5173";
 const dbURI = process.env.DB_URL;
 mongoose
   .connect(dbURI)
@@ -17,10 +18,11 @@ mongoose
   .catch((err) => console.log(err));
 
 const corsOptions = {
-    origin: ["http://localhost:5173"],
-    exposedHeaders: 'Authorization',
-    credentials: true, // Include cookies in requests
+  origin: BASE_FE_URL,
+  credentials: true,
+  exposedHeaders: ["Authorization"],
 };
+
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -28,23 +30,28 @@ app.use(express.json());
 const mainRouter = require("./routes/index");
 
 // Session middleware
+app.set("trust proxy", 1); // ← REQUIRED for secure cookies on Render
+
 app.use(
-    session({
-      secret: process.env.SESSION_SECRET, // Replace with a strong secret
-      resave: false,
-      saveUninitialized: false,
-      cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }, // Use `true` only with HTTPS
-    })
-  );
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: true,
+      httpOnly: true,
+      sameSite: "none",
+      maxAge: 24 * 60 * 60 * 1000,
+    },
+  })
+);
   
   // Passport.js initialization
   app.use(passport.initialize());
   app.use(passport.session());
   
-  app.use(express.json());
-  
   passport.serializeUser((user, done) => {
-    //   console.log("Serializing user with ID:", user.id);
+      console.log("Serializing user with ID:", user.id);
     done(null, user.id);
   });
   
@@ -67,7 +74,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/auth/google/callback",
+      callbackURL: `${BASE_BE_URL}/auth/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -106,7 +113,7 @@ app.get(
   (req, res) => {
     // Successful authentication, redirect home.
     req.session.user = req.user;
-    res.redirect("http://localhost:5173/");
+    res.redirect(`${BASE_FE_URL}/`);
   }
 );
 
@@ -117,7 +124,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/auth/github/callback",
+      callbackURL: `${BASE_BE_URL}/auth/github/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -174,7 +181,7 @@ app.get(
     req.session.user = req.user;
     // res.setHeader("Authorization", `Bearer ${req.user}`);
     console.log(req.user)
-    res.redirect("http://localhost:5173/");
+    res.redirect(`${BASE_FE_URL}`);
   }
 );
 
@@ -201,6 +208,46 @@ passport.use(
     }
   )
 );
+
+const signupBody = z.object({
+    email: z.string().email(),
+    password: z.string(),
+    confirmPassword: z.string(),
+});
+
+app.post("/api/v1/user/signup", async (req, res) => {
+    const { success } = signupBody.safeParse(req.body);
+    if (!success) {
+        return res.status(400).json({ message: "Invalid inputs" });
+    }
+
+    const { email, password, confirmPassword } = req.body;
+
+    if (password !== confirmPassword) {
+        return res.status(400).json({ message: "Passwords don't match" });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+        return res.status(400).json({ message: "Email already in use" });
+    }
+
+    const user = await User.create({ email, password });
+
+    req.login(user, (err) => {
+        if (err) {
+            return res.status(500).json({ message: "Login after signup failed" });
+        }
+        console.log("Login successful:", req.session);
+        return res.status(201).json({
+            message: "User created and signed in successfully",
+            user: {
+                id: user._id,
+                email: user.email,
+            },
+        });
+    });
+});
 
 app.post(
   "/api/v1/user/signin",
@@ -234,20 +281,11 @@ app.delete('/api/v1/user/signout', (req, res, next) => {
 
 app.get("/api/v1/user_data", (req, res) => {
   if (req.isAuthenticated()) {
-    // If the user is authenticated, send back the user data
-    // console.log(req.user.name);
-    // console.log(req.user.email);
-    const token = jwt.sign({
-        userId: req.user._id
-    }, process.env.JWT_SECRET);
-
-    res.setHeader("Authorization", `Bearer ${token}`);
-
+    const resName = req.user.name || req.user.email
     res.json({
-      name: req.user.name, // Assuming the user object has a 'name' property
+      name: resName
     });
   } else {
-    // If the user is not authenticated, send an error message
     res.status(401).json({ message: "Not authenticated" });
   }
 });
@@ -256,5 +294,10 @@ app.get("/session-test", (req, res) => {
   console.log("Session data:", req.session);
   res.json({ session: req.session });
 });
+
+app.get("/healthz", (req, res) => {
+  res.status(200).send("OK");
+}
+);
 
 app.listen(3000);

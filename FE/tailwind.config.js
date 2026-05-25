@@ -16,6 +16,15 @@ export default {
         'theme-gray-primary': '#1C1B1B',
         'theme-gray-secondary': '#797676',
       },
+      keyframes: {
+        radar81: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+      },
+      animation: {
+        radar: 'radar81 2s linear infinite',
+      },
     },
   },
   plugins: [],

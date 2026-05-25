@@ -1,8 +1,14 @@
 const express = require("express");
 const z = require("zod");
 const axios = require("axios");
-const { authMiddleware } = require("../middleware/authMiddleware");
+const dotenv = require("dotenv");
 const router = express.Router();
+const requireAuth = require("../middleware/requireAuth");
+
+dotenv.config();
+
+const BASE_MODEL_URL = process.env.MODEL_URL || "http://localhost:8000";
+const BASE_BE_URL = process.env.BE_URL || "http://localhost:3000";
 
 const predictBody = z.object({
     prompt: z.string().min(1, "Prompt cannot be empty"), 
@@ -12,7 +18,9 @@ const followUpBody = z.object({
     prompt: z.string().min(1, "Improvement prompt Can't be empty"),
 })
 
-router.post("/",authMiddleware,async (req, res) => {
+router.use(requireAuth);
+
+router.post("/",async (req, res) => {
         const validation = predictBody.safeParse(req.body);
         if (!validation.success) {
             return res.status(400).json({
@@ -24,7 +32,7 @@ router.post("/",authMiddleware,async (req, res) => {
         const { prompt } = req.body;
     
         try {
-            const { data } = await axios.post("http://localhost:8000/predict/", { prompt });
+            const { data } = await axios.post(`${BASE_MODEL_URL}/predict/`, { prompt });
     
             return res.status(200).json({
                 message: "Prediction successful",
@@ -40,7 +48,7 @@ router.post("/",authMiddleware,async (req, res) => {
         }
 });
 
-router.post("/improvement", authMiddleware, async(req,res)=>{
+router.post("/improvement", async(req,res)=>{
     const validation = followUpBody.safeParse(req.body);
     if(!validation.success) {
         return res.status(400).json({
@@ -52,7 +60,7 @@ router.post("/improvement", authMiddleware, async(req,res)=>{
     const {prompt} = req.body;
 
     try{
-        const {data} = await axios.post("http://localhost:8000/followup/", {prompt});
+        const {data} = await axios.post(`${BASE_MODEL_URL}/followup/`, {prompt});
 
         return res.status(200).json({
             message: "Prediction Succesfull",

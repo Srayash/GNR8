@@ -1,6 +1,6 @@
 const express = require("express");
 const axios = require("axios");
-const { authMiddleware } = require("../middleware/authMiddleware");
+const requireAuth = require("../middleware/requireAuth");
 require("dotenv").config();
 
 const router = express.Router();
@@ -59,8 +59,9 @@ async function enableGitHubPages(repoName) {
     );
 }
 
+router.use(requireAuth);
 
-router.post("/", authMiddleware, async (req, res) => {
+router.post("/", async (req, res) => {
     try {
         const { files } = req.body;
         if (!files) return res.status(400).json({ error: "Missing files" });
