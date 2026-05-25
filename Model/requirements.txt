@@ -1,7 +1,0 @@
-crewai==0.119.0
-fastapi==0.115.12
-langchain_groq==0.3.2
-pydantic==2.11.4
-python-dotenv==1.1.0
-Requests==2.32.3
-uvicorn==0.34.2
