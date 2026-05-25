@@ -17,23 +17,39 @@ export function LandingPage(){
     const [error, setError] = useRecoilState(errorStateAtom);
 
     useEffect(() => {
-        // Use Axios instead of fetch
-            axios.get(`${BASE_BE_URL}/user_data`, {
-                withCredentials: true, 
-              })
-              .then((response) => {
-                const data = response.data;
-                console.log(data.name);
-                localStorage.setItem("name", data.name);
-              })
-              .catch((err) => {
-                setError(err.response?.data?.message || err.message);
-                localStorage.clear();
-              })
-              .finally(() => {
-                setLoading(false);
-              });
+        // OAuth callback redirects to /#token=<jwt>&name=<name> — capture it.
+        if (window.location.hash.startsWith("#token=")) {
+          const params = new URLSearchParams(window.location.hash.slice(1));
+          const token = params.get("token");
+          const name = params.get("name");
+          if (token) {
+            localStorage.setItem("token", token);
+            if (name) localStorage.setItem("name", name);
+            setUserState({ name, token });
+          }
+          window.history.replaceState(null, "", window.location.pathname);
+        }
 
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setLoading(false);
+          return;
+        }
+
+        axios.get(`${BASE_BE_URL}/user_data`, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then((response) => {
+            const data = response.data;
+            localStorage.setItem("name", data.name);
+          })
+          .catch((err) => {
+            setError({ visible: true, text: err.response?.data?.detail || err.message });
+            localStorage.clear();
+          })
+          .finally(() => {
+            setLoading(false);
+          });
       }, []);
     return<>
         <div className="w-screen h-screen overflow-hidden bg-[radial-gradient(ellipse_60%_60%_at_50%_120%,rgba(121,118,118,0.3),rgba(255,255,255,0))]">

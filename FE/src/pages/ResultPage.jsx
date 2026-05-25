@@ -108,7 +108,7 @@ export function ResultPage(){
       }
   
       const response = await axios.post(`${BASE_BE_URL}/deploy`, requestBody, {
-        withCredentials:true,
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
   
       if (response.data.success) {

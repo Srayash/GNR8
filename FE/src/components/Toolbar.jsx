@@ -4,7 +4,7 @@ import Typography from "../assets/Typography.svg"
 import Color from "../assets/Color.svg"
 import Cube from "../assets/cube.svg"
 import QuickActionHeader from "./QuickActionHeader";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { predictionStateAtom } from "../store/atoms/predictionState";
 import { errorStateAtom } from "../store/atoms/errorState";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +25,7 @@ export default function Toolbar(){
         { label: "background", color: "" },
     ]);
     axios
-      const setPrediction = useSetRecoilState(predictionStateAtom);
+      const [prediction, setPrediction] = useRecoilState(predictionStateAtom);
       const setErrorState = useSetRecoilState(errorStateAtom);
       const [prompt, setPrompt] = useState("");
       const[isLoading, setIsLoading] = useState(false);
@@ -49,9 +49,10 @@ export default function Toolbar(){
     
       try {
         const response = await axios.post(`${BASE_BE_URL}/generate/improvement`, {
-          prompt
+          prompt,
+          code: prediction,
         }, {
-          withCredentials: true,
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         setPrediction(response.data.data.updated_code);
         

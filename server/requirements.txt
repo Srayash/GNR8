@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+email-validator
+python-dotenv
+pyjwt
+httpx
+motor
+authlib
+itsdangerous
+crewai[anthropic,litellm]
+crewai_tools
+langchain_groq

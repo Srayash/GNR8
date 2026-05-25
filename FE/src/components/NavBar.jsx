@@ -1,25 +1,17 @@
 import { useNavigate } from "react-router-dom"
 import logo from "../assets/GNR8.svg"
 import { Avatar } from "./Avatar";
-import axios from "axios";
 
 export function NavBar(){
-
-    const BASE_BE_URL = import.meta.env.VITE_BE_URL || "http://localhost:3000/api/v1"
 
     const navigate = useNavigate();
     const initial = localStorage.getItem("name");
 
-    const handleLogout = async () => {
-      try {
-        await axios.delete(`${BASE_BE_URL}/user/signout`, {
-          withCredentials: true,
-        });
-        localStorage.clear();
-        navigate('/');
-      } catch (error) {
-        console.error('Logout failed:', error);
-      }
+    const handleLogout = () => {
+      // Stateless JWT auth — server has no session to invalidate.
+      // Dropping the token client-side is the entire signout.
+      localStorage.clear();
+      navigate('/');
     };
 
     return <>

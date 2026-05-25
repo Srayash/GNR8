@@ -5,7 +5,7 @@ import arrow_back from "../assets/back.svg";
 import ImprovementChat from "./ImprovementChat";
 import Toolbar from "./Toolbar";
 import axios from "axios";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { predictionStateAtom } from "../store/atoms/predictionState";
 import { errorStateAtom } from "../store/atoms/errorState";
 
@@ -16,7 +16,7 @@ export default function ResultSideBar({ brief }) {
   const [prompt, setPrompt] = useState("");
   const [isChatOpen, setIsChatOpen] = useState(true);
   const navigate = useNavigate();
-  const setPrediction = useSetRecoilState(predictionStateAtom);
+  const [prediction, setPrediction] = useRecoilState(predictionStateAtom);
   const setErrorState = useSetRecoilState(errorStateAtom);
 
   useEffect(() => {
@@ -37,9 +37,10 @@ export default function ResultSideBar({ brief }) {
   
     try {
       const response = await axios.post(`${BASE_BE_URL}/generate/improvement`, {
-        prompt
+        prompt,
+        code: prediction,
       }, {
-        withCredentials:true,
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setPrediction(response.data.data.updated_code);
       
